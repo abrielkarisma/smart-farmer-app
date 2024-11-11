@@ -9,6 +9,7 @@ class LoginResponse with _$LoginResponse {
     required bool success,
     required String message,
     required String? token,
+    required String? role,
     String? storeId,
   }) = _LoginResponse;
 

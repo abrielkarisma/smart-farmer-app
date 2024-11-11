@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_farmer_app/model/laporan.dart';
 import 'package:smart_farmer_app/provider/laporan_provider.dart';
 import 'package:smart_farmer_app/screen/widgets/search_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LaporanScreen extends StatefulWidget {
   const LaporanScreen({super.key});
@@ -19,8 +20,15 @@ class _LaporanScreenState extends State<LaporanScreen> {
   final _searchController = TextEditingController();
   final _scrollController = ScrollController();
   Timer? _debounce;
+  String? actor;
 
-  final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
+  Future<void> _checkActor() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      actor = prefs.getString('user_role');
+    });
+  }
+  // final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
 
   bool get isOwner => actor == 'pemilik';
   bool get isEmployee => actor == 'petugas';
@@ -38,6 +46,7 @@ class _LaporanScreenState extends State<LaporanScreen> {
   @override
   void initState() {
     super.initState();
+    _checkActor();
     final laporanProvider = context.read<LaporanProvider>();
 
     selectedCategory = category.first;

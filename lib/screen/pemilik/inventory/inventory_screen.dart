@@ -6,6 +6,7 @@ import 'package:smart_farmer_app/model/kandang.dart';
 import 'package:smart_farmer_app/provider/inventory_provider.dart';
 import 'package:smart_farmer_app/provider/kandang_provider.dart';
 import 'package:smart_farmer_app/screen/widgets/search_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key, required this.category});
@@ -20,8 +21,15 @@ class _InventoryScreenState extends State<InventoryScreen> {
   final _searchController = TextEditingController();
   final _scrollController = ScrollController();
   Timer? _debounce;
+  String? actor;
 
-  final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
+  Future<void> _checkActor() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      actor = prefs.getString('user_role');
+    });
+  }
+  // final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
 
   bool get isOwner => actor == 'pemilik';
   bool get isEmployee => actor == 'petugas';
@@ -36,6 +44,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   @override
   void initState() {
+    _checkActor();
     super.initState();
     final inventoryProvider = context.read<InventoryProvider>();
     if (!isEmployee) {

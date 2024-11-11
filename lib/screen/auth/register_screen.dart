@@ -7,6 +7,7 @@ import 'package:smart_farmer_app/provider/auth_provider.dart';
 import 'package:smart_farmer_app/screen/widgets/button.dart';
 import 'package:smart_farmer_app/screen/widgets/text_field.dart';
 import 'package:smart_farmer_app/screen/widgets/toast_message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -22,7 +23,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _kodeController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  // String? actor;
 
+  // Future<void> _checkActor() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     actor = prefs.getString('user_role');
+  //     print("anjay $actor");
+  //   });
+  // }
   final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
 
   bool get isOwner => actor == 'pemilik';

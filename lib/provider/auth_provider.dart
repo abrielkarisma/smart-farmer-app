@@ -27,6 +27,7 @@ class AuthProvider extends ChangeNotifier {
 
   bool isLoggedIn = false;
 
+  String? role;
   String? deviceToken;
 
   Future<bool> checkIsLoggedIn() async {
@@ -153,6 +154,8 @@ class AuthProvider extends ChangeNotifier {
       if (loginResponse!.success) {
         loadingState = const LoadingState.loaded();
         _message = loginResponse!.message;
+
+        role = loginResponse!.role;
 
         final User user = User(
           email: email,

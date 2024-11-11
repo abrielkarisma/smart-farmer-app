@@ -23,6 +23,7 @@ mixin _$LoginResponse {
   bool get success => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
   String? get token => throw _privateConstructorUsedError;
+  String? get role => throw _privateConstructorUsedError;
   String? get storeId => throw _privateConstructorUsedError;
 
   /// Serializes this LoginResponse to a JSON map.
@@ -113,6 +114,7 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
     Object? message = null,
     Object? token = freezed,
     Object? storeId = freezed,
+    Object? role = freezed,
   }) {
     return _then(_$LoginResponseImpl(
       success: null == success
@@ -131,6 +133,10 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
           ? _value.storeId
           : storeId // ignore: cast_nullable_to_non_nullable
               as String?,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -142,6 +148,7 @@ class _$LoginResponseImpl implements _LoginResponse {
       {required this.success,
       required this.message,
       required this.token,
+      required this.role,
       this.storeId});
 
   factory _$LoginResponseImpl.fromJson(Map<String, dynamic> json) =>
@@ -155,10 +162,12 @@ class _$LoginResponseImpl implements _LoginResponse {
   final String? token;
   @override
   final String? storeId;
+  @override
+  final String? role;
 
   @override
   String toString() {
-    return 'LoginResponse(success: $success, message: $message, token: $token, storeId: $storeId)';
+    return 'LoginResponse(success: $success, message: $message, token: $token, storeId: $storeId, role: $role)';
   }
 
   @override
@@ -169,7 +178,9 @@ class _$LoginResponseImpl implements _LoginResponse {
             (identical(other.success, success) || other.success == success) &&
             (identical(other.message, message) || other.message == message) &&
             (identical(other.token, token) || other.token == token) &&
-            (identical(other.storeId, storeId) || other.storeId == storeId));
+            (identical(other.storeId, storeId) || other.storeId == storeId) &&
+            (identical(other.role, role) || other.role == role));
+    ;
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -198,6 +209,7 @@ abstract class _LoginResponse implements LoginResponse {
       {required final bool success,
       required final String message,
       required final String? token,
+      required final String? role,
       final String? storeId}) = _$LoginResponseImpl;
 
   factory _LoginResponse.fromJson(Map<String, dynamic> json) =
@@ -211,6 +223,8 @@ abstract class _LoginResponse implements LoginResponse {
   String? get token;
   @override
   String? get storeId;
+  @override
+  String? get role;
 
   /// Create a copy of LoginResponse
   /// with the given fields replaced by the non-null parameter values.

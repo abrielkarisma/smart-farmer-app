@@ -55,8 +55,13 @@ android {
         }
         investor {
             dimension "default"
-            resValue "string", "app_name", "Smart Farmer"
+            resValue "string", "app_name", "Smart Farmer Investor"
             applicationIdSuffix ".investor"
+        }
+        all {
+            dimension "default"
+            resValue "string", "app_name", "Smart Farmer"
+            applicationIdSuffix ".all"
         }
     }
 }

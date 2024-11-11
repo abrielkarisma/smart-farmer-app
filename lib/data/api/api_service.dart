@@ -16,21 +16,28 @@ import 'package:smart_farmer_app/model/register.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_farmer_app/model/statistic.dart';
 import 'package:smart_farmer_app/model/upload.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // static const String baseUrl = 'https://lionfish-app-p99go.ondigitalocean.app';
-  static const String baseUrl = 'http://192.168.110.175:3000';
+  static const String baseUrl = 'http://192.168.1.5:3000';
   static const String _auth = '/auth';
   static const String _user = '/user';
   static const String _inventory = '/inventory';
   static const String _kandang = '/kandang';
   static const String _laporan = '/laporan';
 
-  final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
+  // final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
+  // String actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
+  // String? actor;
+  Future<String?> get actor async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_role'); // Memuat role dari SharedPreferences
+  }
 
-  bool get isPemilik => actor == 'pemilik';
-  bool get isPetugas => actor == 'petugas';
-  bool get isInvestor => actor == 'investor';
+  Future<bool> get isPemilik async => (await actor) == 'pemilik';
+  Future<bool> get isPetugas async => (await actor) == 'petugas';
+  Future<bool> get isInvestor async => (await actor) == 'investor';
 
   /*--------------Auth--------------*/
 
@@ -40,13 +47,15 @@ class ApiService {
     required String name,
     required String phone,
   }) async {
+    final currentActor = await actor; // Ambil nilai actor terbaru
+    final role = currentActor == 'pemilik' ? 'petugas' : 'investor';
     final response = await http.post(
       Uri.parse('$baseUrl$_auth/signup'),
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,
         'nama': name,
-        'role': isPemilik ? 'pemilik' : 'investor',
+        'role': role,
         'phone': phone,
       }),
       headers: <String, String>{
@@ -77,7 +86,9 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return LoginResponse.fromJson(jsonDecode(response.body));
+      LoginResponse loginResponse =
+          LoginResponse.fromJson(jsonDecode(response.body));
+      return loginResponse;
     } else {
       return LoginResponse.fromJson(jsonDecode(response.body));
     }
@@ -144,9 +155,11 @@ class ApiService {
     jenis = '',
     name = '',
   }) async {
-    String url = isPemilik
+    final pemilik = await isPemilik;
+    final petugas = await isPetugas;
+    String url = pemilik
         ? '$baseUrl$_inventory/kandang/$idKandang?page=$page&pageSize=$pageSize&jenis=$jenis&name=$name'
-        : isPetugas
+        : petugas
             ? '$baseUrl$_inventory/petugas?page=$page&pageSize=$pageSize&jenis=$jenis&name=$name'
             : '$baseUrl$_inventory/kandang/$idKandang?page=$page&pageSize=$pageSize&jenis=$jenis&name=$name';
     final response = await http.get(
@@ -348,9 +361,11 @@ class ApiService {
     page = 1,
     pageSize = 10,
   }) async {
-    String url = isPemilik
+    final pemilik = await isPemilik;
+    final petugas = await isPetugas;
+    String url = pemilik
         ? '$baseUrl$_kandang?page=$page&pageSize=$pageSize&nama=$nama'
-        : isPetugas
+        : petugas
             ? '$baseUrl$_kandang/petugas?page=$page&pageSize=$pageSize&nama=$nama'
             : '$baseUrl$_kandang/investor?page=$page&pageSize=$pageSize&nama=$nama';
     final response = await http.get(
@@ -533,9 +548,11 @@ class ApiService {
     int pageSize = 10,
     String kandang = '',
   }) async {
-    String url = isPemilik
+    final pemilik = await isPemilik;
+    final petugas = await isPetugas;
+    String url = pemilik
         ? '$baseUrl$_laporan/owner/all?page=$page&pageSize=$pageSize&jenis=$jenis&kandang=$kandang'
-        : isPetugas
+        : petugas
             ? '$baseUrl$_laporan/petugas/all?page=$page&pageSize=$pageSize&jenis=$jenis&kandang=$kandang'
             : '$baseUrl$_laporan/investor/all?page=$page&pageSize=$pageSize&jenis=$jenis&kandang=$kandang';
     final response = await http.get(

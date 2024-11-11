@@ -36,8 +36,12 @@ class _DashboardPetugasScreenState extends State<DashboardPetugasScreen> {
             initial: () => const SizedBox.shrink(),
             loading: () => const SizedBox.shrink(),
             loaded: () {
-              final data = kandangProvider.kandangPetugasResponse!.result;
-              return _buildFloatingActionButton(data);
+              final data = kandangProvider.kandangPetugasResponse?.result;
+              if (data != null) {
+                return _buildFloatingActionButton(data);
+              } else {
+                return const SizedBox.shrink();
+              }
             },
             error: (message) => const SizedBox.shrink(),
           ),

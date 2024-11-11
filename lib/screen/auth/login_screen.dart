@@ -6,6 +6,7 @@ import 'package:smart_farmer_app/provider/auth_provider.dart';
 import 'package:smart_farmer_app/screen/widgets/button.dart';
 import 'package:smart_farmer_app/screen/widgets/text_field.dart';
 import 'package:smart_farmer_app/screen/widgets/toast_message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -138,7 +139,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (result && mounted) {
-        ToastMessage.show(context, provider.message!);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_role', provider.role!);
+        // ToastMessage.show(context, provider.message!);
         context.goNamed('home');
       } else {
         if (mounted) {

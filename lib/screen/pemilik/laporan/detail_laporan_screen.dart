@@ -11,6 +11,7 @@ import 'package:smart_farmer_app/screen/widgets/alert_dialog.dart';
 import 'package:smart_farmer_app/screen/widgets/button.dart';
 import 'package:smart_farmer_app/screen/widgets/text_field.dart';
 import 'package:smart_farmer_app/screen/widgets/toast_message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailLaporanScreen extends StatefulWidget {
   const DetailLaporanScreen({
@@ -29,8 +30,23 @@ class DetailLaporanScreen extends StatefulWidget {
 class _DetailLaporanScreenState extends State<DetailLaporanScreen> {
   final _jumlahController = TextEditingController();
   final _ciriCiriController = TextEditingController();
+  String? actor;
 
-  final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
+  @override
+  void initState() {
+    super.initState();
+    checked = List<bool>.filled(ciriCiriList.length, false);
+    _checkActor();
+  }
+
+  Future<void> _checkActor() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      actor = prefs.getString('user_role');
+    });
+  }
+
+  // final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
 
   bool get isOwner => actor == 'pemilik';
   bool get isEmployee => actor == 'petugas';
@@ -46,12 +62,6 @@ class _DetailLaporanScreenState extends State<DetailLaporanScreen> {
   List<bool> checked = [];
   final String otherOption = "Lainnya";
   bool isOtherChecked = false;
-
-  @override
-  void initState() {
-    super.initState();
-    checked = List<bool>.filled(ciriCiriList.length, false);
-  }
 
   @override
   void dispose() {

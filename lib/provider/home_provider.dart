@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_farmer_app/data/api/api_service.dart';
 import 'package:smart_farmer_app/data/local/auth_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeProvider extends ChangeNotifier {
   final ApiService apiService;
@@ -19,6 +20,8 @@ class HomeProvider extends ChangeNotifier {
   Future<bool> logout() async {
     try {
       await authRepository.deleteUser();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
     } catch (e) {
       debugPrint(e.toString());
     }

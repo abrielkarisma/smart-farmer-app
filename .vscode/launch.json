@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
+  
     {
       "name": "smart_farmer_app (pemilik)",
       "request": "launch",
@@ -21,6 +22,13 @@
       "type": "dart",
       "program": "lib/main/investor_main.dart",
       "args": ["--dart-define=actor=investor", "--flavor", "investor", "--target", "lib/main/investor_main.dart"]
+    },
+    {
+      "name": "smart_farmer_app (all)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main/main.dart",
+      "args": ["--dart-define=actor=all", "--flavor", "investor", "--target", "lib/main/main.dart"]
     },
     // {
     //   "name": "smart_farmer_app (qr)",

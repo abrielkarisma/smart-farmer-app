@@ -13,6 +13,7 @@ import 'package:smart_farmer_app/screen/pemilik/laporan/laporan_screen.dart';
 import 'package:smart_farmer_app/screen/pemilik/petugas/petugas_screen.dart';
 import 'package:smart_farmer_app/screen/widgets/alert_dialog.dart';
 import 'package:smart_farmer_app/screen/widgets/item_drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePemilikScreen extends StatefulWidget {
   const HomePemilikScreen({super.key});
@@ -25,11 +26,20 @@ class _HomePemilikScreenState extends State<HomePemilikScreen> {
   int _selectedIndex = 0;
   String _title = 'Dashboard';
   bool isOwner = true;
+  String? actor;
 
   late KandangProvider kandangProvider;
   late AuthProvider authProvider;
 
-  final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
+  Future<void> _checkActor() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      actor = prefs.getString('user_role');
+      print("anjay $actor");
+    });
+  }
+
+  // final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
 
   bool get isEmployee => actor == 'petugas';
 
@@ -42,6 +52,7 @@ class _HomePemilikScreenState extends State<HomePemilikScreen> {
   @override
   void initState() {
     super.initState();
+    _checkActor();
 
     kandangProvider = context.read<KandangProvider>();
     authProvider = context.read<AuthProvider>();

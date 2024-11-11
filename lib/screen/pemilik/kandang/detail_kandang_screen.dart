@@ -11,6 +11,7 @@ import 'package:smart_farmer_app/model/detail_kandang.dart';
 import 'package:smart_farmer_app/provider/detail_kandang_provider.dart';
 import 'package:smart_farmer_app/provider/kandang_provider.dart';
 import 'package:smart_farmer_app/screen/widgets/toast_message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailKandangScreen extends StatefulWidget {
   const DetailKandangScreen({super.key, required this.idKandang});
@@ -23,8 +24,21 @@ class DetailKandangScreen extends StatefulWidget {
 
 class _DetailKandangScreenState extends State<DetailKandangScreen> {
   late KandangProvider _inventoryProvider;
+  String? actor;
 
-  final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
+  @override
+  void initState() {
+    super.initState();
+    _checkActor();
+  }
+
+  Future<void> _checkActor() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      actor = prefs.getString('user_role');
+    });
+  }
+  // final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
 
   bool get isOwner => actor == 'pemilik';
   bool get isEmployee => actor == 'petugas';

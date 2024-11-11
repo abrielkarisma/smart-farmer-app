@@ -10,6 +10,7 @@ import 'package:smart_farmer_app/provider/detail_inventory_provider.dart';
 import 'package:smart_farmer_app/provider/inventory_provider.dart';
 import 'package:smart_farmer_app/screen/widgets/button.dart';
 import 'package:smart_farmer_app/screen/widgets/toast_message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailInventoryScreen extends StatefulWidget {
   const DetailInventoryScreen(
@@ -28,8 +29,21 @@ class DetailInventoryScreen extends StatefulWidget {
 
 class _DetailInventoryScreenState extends State<DetailInventoryScreen> {
   late InventoryProvider _inventoryProvider;
+  String? actor;
 
-  final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
+  @override
+  void initState() {
+    super.initState();
+    _checkActor();
+  }
+
+  Future<void> _checkActor() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      actor = prefs.getString('user_role');
+    });
+  }
+  // final actor = const String.fromEnvironment('actor', defaultValue: 'pemilik');
 
   bool get isOwner => actor == 'pemilik';
   bool get isEmployee => actor == 'petugas';

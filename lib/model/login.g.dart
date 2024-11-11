@@ -12,6 +12,7 @@ _$LoginResponseImpl _$$LoginResponseImplFromJson(Map<String, dynamic> json) =>
       message: json['message'] as String,
       token: json['token'] as String?,
       storeId: json['storeId'] as String?,
+      role: json['role'] as String?,
     );
 
 Map<String, dynamic> _$$LoginResponseImplToJson(_$LoginResponseImpl instance) =>
